@@ -7,3 +7,5 @@ class SetBill(BaseModel):
     SetBillName = db.Column(db.String(200), nullable=False)
     HomeID = db.Column(db.BigInteger, db.ForeignKey('Homes.ID'), nullable=False)
     Sum = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    BillDate = db.Column(db.DateTime, nullable=False)
+    PaiedBy = db.Column(db.BigInteger, db.ForeignKey('Tenants.ID'))

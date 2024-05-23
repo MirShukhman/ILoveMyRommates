@@ -4,8 +4,8 @@ from . import db
 class Payment(BaseModel):
     __tablename__ = 'Payments'
     
-    PayedBy = db.Column(db.BigInteger, db.ForeignKey('Tenants.ID'), nullable=False)
-    PayedTo = db.Column(db.BigInteger, db.ForeignKey('Tenants.ID'), nullable=False)
+    PaiedBy = db.Column(db.BigInteger, db.ForeignKey('Tenants.ID'), nullable=False)
+    PaiedTo = db.Column(db.BigInteger, db.ForeignKey('Tenants.ID'), nullable=False)
     BillID = db.Column(db.BigInteger, db.ForeignKey('Bills.ID'), nullable=False)
     PaymentDate = db.Column(db.DateTime, nullable=False)
     Sum = db.Column(db.Numeric(precision=10, scale=2), nullable=False)

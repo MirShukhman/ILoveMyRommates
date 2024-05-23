@@ -8,3 +8,4 @@ class Tenant(BaseModel):
     HomeID = db.Column(db.BigInteger, db.ForeignKey('Homes.ID'), nullable=False)
     PaymentPart = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     CanEdit = db.Column(db.Boolean, nullable=False)
+    JoinedAt = db.Column(db.DateTime, nullable=False)

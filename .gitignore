@@ -1,2 +1,4 @@
 Logistics/
 *.docx
+*.env
+log.json

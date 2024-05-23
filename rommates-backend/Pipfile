@@ -8,6 +8,11 @@ flask = "*"
 flask-sqlalchemy = "*"
 mysql-connector-python = "*"
 flask-cors = "*"
+sendgrid = "*"
+python-dotenv = "*"
+flask-bcrypt = "*"
+jwt = "*"
+pyjwt = "*"
 
 [dev-packages]
 

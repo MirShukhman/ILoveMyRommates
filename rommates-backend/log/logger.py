@@ -2,10 +2,9 @@ import json
 import os
 from datetime import datetime
 
-
 class Logger(object):
     _instance = None
-    _log_file = 'log.json'
+    _log_file = './log/log.json'
     
     def __new__(cls, log_file=_log_file):
         if cls._instance is None:
@@ -64,6 +63,6 @@ class Logger(object):
 
     def _save_entries(self, entries):
         with open(self.log_path, 'w') as file:
-            json.dump(entries, file)
+            json.dump(entries, file,indent=2)
         
         
