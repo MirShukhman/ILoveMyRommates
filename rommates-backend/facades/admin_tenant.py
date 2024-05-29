@@ -18,3 +18,26 @@ class AdminTenant(AllTenants):
             
         finally:
             self.logger.log('AdminTenant','_get_admin_prem', front_end_token, output)
+            
+            
+    def add_tenant(self,front_end_token):
+        pass
+    
+    
+    def approve_user_as_tenant(self,front_end_token):
+        pass
+    
+    
+    def remove_tenant(self,front_end_token):
+        pass
+    
+    
+    def send_invite_to_join(self,front_end_token):
+        pass
+    
+    
+    def disactivate_home(self,front_end_token):
+        pass
+    
+    
+    

@@ -80,7 +80,7 @@ class Unlogged:
                         return frontend_token, err
                     
                     else:
-                        err, output = "Inernal Error. Please Try Again Later."
+                        err, output = "Internal Error. Please Try Again Later."
                         return False, err
                           
             else:
@@ -88,7 +88,7 @@ class Unlogged:
                 return False,err
             
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
             
@@ -139,11 +139,11 @@ class Unlogged:
                     return True, err
                 
             else:
-                err , output= "Inernal Error. Please Try Again Later."
+                err , output= "Internal Error. Please Try Again Later."
                 return False, err
         
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
         
@@ -178,7 +178,7 @@ class Unlogged:
                         return True, err
                     
                     else: 
-                        err, output = "Inernal Error. Please Try Again Later."
+                        err, output = "Internal Error. Please Try Again Later."
                         return False,err
                         
                 else:
@@ -186,11 +186,11 @@ class Unlogged:
                     return False,err
                 
             else:
-                err, output = "Inernal Error. Please Try Again Later."
+                err, output = "Internal Error. Please Try Again Later."
                 return False,err
                 
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
         
@@ -257,14 +257,14 @@ class Unlogged:
                     output = True
                     return True, err
                 
-                err, output = "Inernal Error. Please Try Again Later."
+                err, output = "Internal Error. Please Try Again Later."
                 return False,err
             
             err, output = 'No user with Email given.'
             return False,err
             
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
         
@@ -300,17 +300,17 @@ class Unlogged:
                         output = True
                         return True, err
                     
-                    err, output = "Inernal Error. Please Try Again Later."
+                    err, output = "Internal Error. Please Try Again Later."
                     return False, err
                 
                 err, output = "Wrong Code!"
                 return False, err
             
-            err, output = "Inernal Error. Please Try Again Later."
+            err, output = "Internal Error. Please Try Again Later."
             return False, err
         
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
         

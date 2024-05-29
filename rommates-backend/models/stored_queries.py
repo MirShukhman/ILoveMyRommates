@@ -29,6 +29,13 @@ class StoredQueries:
         return query
     
     
+    def GetUserByTenantID(self,tennantID):
+        query = f'SELECT u.* FROM users u INNER JOIN tenants t ON t.ID = u.tennantID WHERE t.ID = {tennantID};'
+        
+        logger.log('StoredQueries','GetHomeByUserID',tennantID,query)
+        return query
+    
+        
     def GetHomeByUserID(self,userId):
         query = f'SELECT h.* FROM homes h INNER JOIN tenants t ON h.ID = t.HomeID INNER JOIN users u ON t.ID = u.TenantID WHERE u.ID = {userId};'
         
@@ -50,6 +57,13 @@ class StoredQueries:
         return query
     
     
+    def GetBillsNotPaidByTenant(self,tennantID):
+        query = f'SELECT b.* FROM bills b INNER JOIN tenants t ON t.ID = b.PaiedBy WHERE t.ID != {tennantID};'
+        
+        logger.log('StoredQueries','GetBillsNotPaidByTenant',tennantID,query)
+        return query
+    
+        
     def GetPaymentsByTennantID(self,tennantID):
         query = f'SELECT p.* FROM payments p INNER JOIN tenants t ON t.ID = p.PaiedBy WHERE t.ID = {tennantID};'
         
@@ -82,6 +96,13 @@ class StoredQueries:
         query = f'SELECT p.* FROM payments p INNER JOIN tenants t ON t.ID = p.PaiedBy INNER JOIN homes h ON h.ID = t.HomeID WHERE h.ID = {homeID};'
         
         logger.log('StoredQueries','GetPaymentsByHomeID',homeID,query)
+        return query
+    
+    
+    def GetPaymentsByBillID(self,billID):
+        query = f'SELECT p.* FROM payments p INNER JOIN bills b ON b.ID = p.BillID WHERE b.ID = {billID};'
+        
+        logger.log('StoredQueries','GetPaymentsByBillID',billID,query)
         return query
     
     

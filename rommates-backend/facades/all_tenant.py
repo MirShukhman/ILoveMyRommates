@@ -1,10 +1,12 @@
 
 from app import bcrypt
+from datetime import datetime
 
 from .unlogged import Unlogged
 from backend_logic.authenticator import Authenticator
 from models.users import User
 from models.tenants import Tenant
+from models.homes import Home
 
 # 29.05.24
 # Class AllTenants Facade will hold funcs avilable to every user.
@@ -115,11 +117,11 @@ class AllTenants(Unlogged):
                     output = True
                     return True, err
                 
-            err, output = "Inernal Error. Please Try Again Later."
+            err, output = "Internal Error. Please Try Again Later."
             return False, err
      
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
             
@@ -138,7 +140,7 @@ class AllTenants(Unlogged):
                     err, output = 'Wrong Password'
                     return False, err
                 
-                existing_user = User.get_query('CheckIfUserExists',str(None),str(new_email))
+                existing_user = User.get_query('GetUserByEmail',str(new_email))
                 if existing_user:
                     err , output= 'User with given Email already exist. Please pick different credentials.'
                     return False, err
@@ -151,11 +153,11 @@ class AllTenants(Unlogged):
                     output = True
                     return True, err
                 
-            err, output = "Inernal Error. Please Try Again Later."
+            err, output = "Internal Error. Please Try Again Later."
             return False, err
      
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
             
@@ -181,11 +183,11 @@ class AllTenants(Unlogged):
                     output = True
                     return True, err
                 
-            err, output = "Inernal Error. Please Try Again Later."
+            err, output = "Internal Error. Please Try Again Later."
             return False, err
      
         except Exception as e:
-            err = "Inernal Error. Please Try Again Later."
+            err = "Internal Error. Please Try Again Later."
             output = str(e)
             return False, err
             
@@ -193,13 +195,62 @@ class AllTenants(Unlogged):
             self.logger.log('Tenant','update_password',(front_end_token),output)    
     
     
-    def add_home(self, front_end_token, home_name, billing_date):
+    def add_self_as_first_tenant(self,front_end_token):
         pass
+    
+    
+    def add_home(self, front_end_token, home_name, billing_date):
+        err = None
+        try:
+            user_id = self._get_authentication(front_end_token)
+            if user_id:
+                now = datetime.now()
+                add_home = Home.add(HomeName=home_name, CreatedAt=now,
+                                    BillingDate = billing_date, IsActive=True)
+                
+                if add_home:
+                        output = True
+                        return True, err
+            
+            err, output = "Internal Error. Please Try Again Later."
+            return False, err
+        
+        except Exception as e:
+            err = "Internal Error. Please Try Again Later."
+            output = str(e)
+            return False, err    
+            
+        finally:
+           self.logger.log('Tenant','add_home',(front_end_token,home_name,billing_date),output)  
     
     
     def leave_home(self,front_end_token):
-        pass
-    
+        err = None
+        try:
+            user_id = self._get_authentication(front_end_token)
+            home_id = self._get_users_home_id(front_end_token)
+            tenant_id = self._get_users_tenant_id(front_end_token)
+            if user_id and home_id and tenant_id:
+                now = datetime.now()
+                new_json = {"HomeID": home_id,
+                            "TenantID": tenant_id,
+                            "LeftAt": now}
+                leave_home = User.update(OldHomes=new_json, TenantID=None)
+                if leave_home:
+                        output = True
+                        return True, err
+            
+            err, output = "Internal Error. Please Try Again Later."
+            return False, err
+        
+        except Exception as e:
+            err = "Internal Error. Please Try Again Later."
+            output = str(e)
+            return False, err    
+            
+        finally:
+           self.logger.log('Tenant','leave_home',(front_end_token),output)  
+               
     
     def find_home_by_id(self, home_id):
         pass
