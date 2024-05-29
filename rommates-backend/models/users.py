@@ -11,3 +11,4 @@ class User(BaseModel):
     PhoneNum =  db.Column(db.Integer)
     ProfilePic = db.Column(db.LargeBinary)
     OldHomes = db.Column(db.JSON)
+    VerificationCode = db.Column(db.Integer)

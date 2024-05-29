@@ -8,8 +8,8 @@ from log.logger import Logger
 logger = Logger()
 
 # 23.05.24
-# LoginToken class will handle all token-related activity- creation of token and saving to db, 
-#   retriving from db and deletion.
+# LoginToken class will handle all token-related activity: creation of token 
+#   and saving to db, retriving from db and deletion.
 # Each use is logged in Logger
 
 class LoginToken:
@@ -20,8 +20,9 @@ class LoginToken:
                        home_id, name, premmisson):
         """
         23.05.24
-        Create Token, hash front_end_token, 
-        save token to db, return front_end_token and db token id.
+        Create Token, hash token for db, check if old token 
+        for user id exists if so delete, save hashed token to db,
+        return front_end_token.
 
         Args:
             user_id (int)
@@ -31,7 +32,7 @@ class LoginToken:
             premmisson (int): 0 or 1 (bool)
 
         Returns:
-            token_id and front_end_token/ False
+            front_end_token/ False
         """
         output = True
         try:
@@ -45,16 +46,22 @@ class LoginToken:
                 algorithm='HS256'
             )
             
-            # create hashed frontend token 
-            front_end_token = bcrypt.generate_password_hash(token).decode('utf-8')
+            hashed_token = bcrypt.generate_password_hash(token).decode('utf-8')
             
-            # add token to db 
+            # add hashed token to db 
             now = datetime.now()
             three_hours_later = now + timedelta(hours=3)
-            add_to_db = Token.add(UserID=user_id, Token=token, 
+            
+            # check if old token exists, if so delete
+            existing_token = Token.get_query('GetTokenByUserID',user_id)
+            if existing_token:
+                Token.delete(existing_token[0][0])
+                
+            add_to_db = Token.add(UserID=user_id, Token=hashed_token, 
                                 CreatedAt=now, ExpiresAt=three_hours_later)
             if add_to_db:
-                return add_to_db.ID, front_end_token
+                # return token to be saved in frontend
+                return token
             
             output = False
             return False
@@ -67,22 +74,22 @@ class LoginToken:
             logger.log('LoginToken','generate_token',(user_id, name, premmisson),output)
     
     
-    def get_token(self, token_id):
+    def get_token(self, user_id):
         """
         23.05.24
-        Find token by id
+        Find db token by user id
 
         Args:
-            token_id (int)
+            user_id (int)
 
         Returns:
-            token/ False
+            db token/ False
         """
         try:
-            token = Token.get(token_id)
+            token = Token.get_query('GetTokenByUserID',user_id)
             output = token
             if token:
-                return token.Token
+                return token
                 
             return None
             
@@ -91,21 +98,23 @@ class LoginToken:
             return None
         
         finally:
-            logger.log('LoginToken','get_token',(token_id),output)
+            logger.log('LoginToken','get_token',user_id,output)
     
     
-    def delete_token(self, token_id):
+    def delete_token(self, user_id):
         """
         23.05.24
-        Delete token by id
+        Delete token using user_id
 
         Args:
-            token_id (int)
+            user_id (int)
 
         Returns:
             True/ False
         """
         try:
+            token = Token.get_query('GetTokenByUserID',user_id)
+            token_id=token[0][0]
             delete = Token.delete(token_id)
             output = delete
             return delete
@@ -115,4 +124,4 @@ class LoginToken:
             return False
         
         finally:
-            logger.log('LoginToken','delete_token',(token_id),output)
+            logger.log('LoginToken','delete_token',user_id,output)

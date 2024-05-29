@@ -1,10 +1,12 @@
 
+from sqlalchemy import text
 from . import db
 from log.logger import Logger
 
 # 19.05.24
 # Abstract class from whom all db models will inherit
-# Holds CRUD and defines PK for each db model
+# Holds CRUD and defines PK for each db model,
+#   and a func to acess stored queries (from StoredQueries class)
 # Each use is logged in Logger
 
 logger = Logger()
@@ -28,10 +30,8 @@ class BaseModel(db.Model):
         output = None
         try:
             result = cls.query.get(id)
-            if result:
-                output = result
-                return result
-            return None
+            output = result
+            return result if result else None
 
         except Exception as e:
             output = str(e)
@@ -53,10 +53,8 @@ class BaseModel(db.Model):
         output = None
         try:
             result = cls.query.all()
-            if result:
-                output = result
-                return result
-            return None
+            output = result
+            return result if result else None
             
         except Exception as e:
             output = str(e)
@@ -152,25 +150,32 @@ class BaseModel(db.Model):
             logger.log(cls.__name__,'delete',id,output)
          
             
-    @classmethod
-    def get_stored_procedure(sp_name, parameters):
-        output = None
+    def get_query(stored_query,*params):
+        '''
+        26.05.24
+        Retrives stored_query from StoredQueries class and gives it 
+        params given, translates to text and executes through db, 
+        returns the result of the query
+        
+        Args:
+            stored_query(str)
+            params
+        Returns:
+            Stored Query output (list of tupples)/ None if none found or err
+        '''
+        from .stored_queries import StoredQueries
+        sq = StoredQueries()
         try:
-            placeholders = ', '.join([':%s' % key for key in parameters.keys()])
-            query = f"CALL {sp_name}({placeholders})"
-
-            execute  = db.session.execute(query, parameters)
-            result = execute.fetchall()
-
-            if result:
-                output = result
-                return result
-            
-            return None
+            query_method = getattr(sq, stored_query)
+            query = query_method(*params)
+            text_query=text(query)
+            result = db.session.execute(text_query).all()
+            output = result          
+            return result if result else None
 
         except Exception as e:
             output = str(e)
             return None
         
         finally:
-            logger.log('BaseModel','get_stored_procedure',(sp_name, parameters),output)
+            logger.log('BaseModel','get_query',(stored_query,params),output)

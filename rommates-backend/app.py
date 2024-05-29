@@ -25,17 +25,16 @@ if __name__ == "__main__":
         from models.set_bills import SetBill
         from models.tenants import Tenant
         from models.users import User
+        from models.tokens import Token
         db.create_all()
         
         # playground
-        # 3 homes
+        from facades.unlogged import Unlogged
+        unlogged = Unlogged()
+        #print(unlogged.sign_up_first_step("test","test","miriamsh888@gmail.com",555,None))
+        #print(unlogged.sign_up_second_step("miriamsh888@gmail.com",443286))
+        #print(unlogged.reset_password("miriamsh888@gmail.com",682841,'888'))
         
-        # 2 tennants per home (6 total) + 6 usrs 
-        #add=User.add(TenantID= None, PasswordHash= '123', Username='test',Email='test')
-        #print (add.ID)
-        from backend_logic.login_token import LoginToken
-        lt = LoginToken()
-        lt.generate_token(1,1,1)
-        
+                
     app.run(debug=app.config['DEBUG'], use_reloader=app.config['USE_RELOADER'])
     
