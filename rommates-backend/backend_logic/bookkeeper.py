@@ -61,3 +61,15 @@ class Bookkeeper:
         # return divison
         
         pass
+    
+    
+    def recalculate_payment_part_after_tenant_leaving(self, home_id, tenant_id):
+        # GetTenantsByHomeID(home_id) = tenats 
+        # num of tenants = len(tenats)
+        # get tenat by id (tenant_id) - get PaymentPart
+        # PaymentPart/num of tenants = add
+        # for tenant in tenats:
+        #   new_payment_part = tenant.PaymentPart + add
+        #   tenant.update (tenant.ID, PaymentPart = new_payment_part)
+        # return bool
+        pass

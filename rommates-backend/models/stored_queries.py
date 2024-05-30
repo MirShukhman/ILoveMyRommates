@@ -30,7 +30,7 @@ class StoredQueries:
     
     
     def GetUserByTenantID(self,tennantID):
-        query = f'SELECT u.* FROM users u INNER JOIN tenants t ON t.ID = u.tennantID WHERE t.ID = {tennantID};'
+        query = f'SELECT u.* FROM users u INNER JOIN tenants t ON t.ID = u.TenantID WHERE t.ID = {tennantID};'
         
         logger.log('StoredQueries','GetHomeByUserID',tennantID,query)
         return query
@@ -48,6 +48,13 @@ class StoredQueries:
         
         logger.log('StoredQueries','GetTenantsByHomeID',homeID,query)
         return query
+    
+    
+    def GetAdminTenantsByHomeID(self,homeID):
+        query = f'SELECT t.* FROM tenants t INNER JOIN homes h ON h.ID = t.HomeID WHERE h.ID = {homeID} and t.CanEdit = 1;'
+        
+        logger.log('StoredQueries','GetTenantsByHomeID',homeID,query)
+        return query    
     
     
     def GetBillsByTennantID(self,tennantID):

@@ -40,6 +40,7 @@ class BaseModel(db.Model):
         finally:
             logger.log(cls.__name__,'get',id,output)
     
+    
     @classmethod
     def get_all(cls):
         """
@@ -62,6 +63,7 @@ class BaseModel(db.Model):
 
         finally:
             logger.log(cls.__name__,'get','all',output)       
+       
         
     @classmethod
     def add(cls, **kwargs):

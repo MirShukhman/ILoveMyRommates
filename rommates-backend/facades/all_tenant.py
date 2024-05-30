@@ -4,6 +4,7 @@ from datetime import datetime
 
 from .unlogged import Unlogged
 from backend_logic.authenticator import Authenticator
+from backend_logic.bookkeeper import Bookkeeper
 from models.users import User
 from models.tenants import Tenant
 from models.homes import Home
@@ -15,7 +16,8 @@ from models.homes import Home
 class AllTenants(Unlogged):
     def __init__(self):
         super().__init__()
-        self.authenticator = Authenticator()  
+        self.authenticator = Authenticator()
+        self.bookkeeper = Bookkeeper()  
     
       
     def _get_authentication(self,front_end_token):
@@ -237,6 +239,8 @@ class AllTenants(Unlogged):
                             "LeftAt": now}
                 leave_home = User.update(OldHomes=new_json, TenantID=None)
                 if leave_home:
+                    recalculate = self.bookkeeper.recalculate_payment_part_after_tenant_leaving(home_id,tenant_id)
+                    if recalculate:
                         output = True
                         return True, err
             

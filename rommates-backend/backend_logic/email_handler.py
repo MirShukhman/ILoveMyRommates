@@ -49,7 +49,7 @@ class EmailHandler:
             logger.log('email_handler','send_email',(email_receiver,subject),output)       
                 
         
-    def create_verification_message(self,verification_code):
+    def _create_verification_message(self,verification_code):
         output=True
         try:
             # Create environment and load the template
@@ -65,16 +65,50 @@ class EmailHandler:
             return False
             
         finally:
-            logger.log('email_handler','create_verification_message',verification_code,output)      
+            logger.log('email_handler','_create_verification_message',verification_code,output)      
             
     
-    def create_invitation_message(self, home_id):
-        pass
+    def _create_invitation_message(self, home_id):
+        output=True
+        try:
+            # Create environment and load the template
+            env = Environment(loader=FileSystemLoader('templates'))
+            template = env.get_template('invitation_template.html')
+
+            # Render the template with the provided param
+            rendered_content = template.render(home_id=home_id)
+            return rendered_content
+        
+        except Exception as e:
+            output=str(e)
+            return False
+            
+        finally:
+            logger.log('email_handler','_create_invitation_message',home_id,output)     
+    
+    
+    def _create_notification_message(self, notification):
+        output=True
+        try:
+            # Create environment and load the template
+            env = Environment(loader=FileSystemLoader('templates'))
+            template = env.get_template('notification_template.html')
+
+            # Render the template with the provided param
+            rendered_content = template.render(notification=notification)
+            return rendered_content
+        
+        except Exception as e:
+            output=str(e)
+            return False
+            
+        finally:
+            logger.log('email_handler','_create_notification_message',notification,output)       
     
     
     def send_verification_email(self, email_receiver, verification_code):
         try:
-            message= self.create_verification_message(verification_code)
+            message= self._create_verification_message(verification_code)
             send_email=self._send_email(email_receiver,'Your Verification Code',message)
             output = send_email
             return send_email
@@ -85,3 +119,33 @@ class EmailHandler:
             
         finally:
             logger.log('email_handler','send_verification_email',(email_receiver,verification_code),output)      
+            
+            
+    def send_invitation_email(self, email_receiver, home_id):
+        try:
+            message= self._create_invitation_message(home_id)
+            send_email=self._send_email(email_receiver,'Invitation To Join a Home',message)
+            output = send_email
+            return send_email
+            
+        except Exception as e:
+            output=str(e)
+            return False
+            
+        finally:
+            logger.log('email_handler','send_invitation_email',(email_receiver,home_id),output)      
+            
+            
+    def send_notification_email(self, email_receiver, notification):
+        try:
+            message= self._create_notification_message(notification)
+            send_email=self._send_email(email_receiver,'New Notification',message)
+            output = send_email
+            return send_email
+            
+        except Exception as e:
+            output=str(e)
+            return False
+            
+        finally:
+            logger.log('email_handler','send_notification_email',(email_receiver,notification),output)      

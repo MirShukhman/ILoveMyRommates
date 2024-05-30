@@ -26,6 +26,7 @@ if __name__ == "__main__":
         from models.tenants import Tenant
         from models.users import User
         from models.tokens import Token
+        from models.notifications import Notification
         db.create_all()
         
         # playground
